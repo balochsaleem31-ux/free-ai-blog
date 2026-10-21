@@ -2,15 +2,13 @@ name: Free AI Blog Generator
 
 on:
   schedule:
-    - cron: '0 8 * * *'  # Runs automatically once every day at 8:00 AM UTC
-  workflow_dispatch:     # Enables manual execution anytime via a button
+    # Runs twice daily at 08:00 AM UTC and 08:00 PM UTC
+    - cron: '0 8,20 * * *'
+  workflow_dispatch:
 
 jobs:
   build-and-commit:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -31,5 +29,5 @@ jobs:
       - name: Commit and Push Generated Post
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "🤖 Auto-generated blog post [skip ci]"
+          commit_message: "🤖 Auto-generated twice-daily blog post [skip ci]"
           branch: main
