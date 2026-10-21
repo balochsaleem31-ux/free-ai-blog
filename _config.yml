@@ -1,0 +1,6 @@
+title: "Tech & AI Daily Trends"
+description: "Daily automated insights into AI and productivity."
+theme: minima
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
