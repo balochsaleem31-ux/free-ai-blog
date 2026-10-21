@@ -229,17 +229,14 @@
       </div>
 
       <!-- TAB CONTENT 3: SYSTEM REAL-TIME LOGS -->
-      <div id="content-logs" class="flex-grow overflow-y-auto font-mono text-[10px] space-y-1 bg-black p-2 border border-[#008837] hidden" id="logFeed">
-        <div class="text-gray-500">[08:00:02] ULTRON: Initiating morning workflow scan...</div>
-        <div class="text-emerald-400">[08:00:05] ORACLE: Scraped 14 trending keywords from Google Trends.</div>
-        <div class="text-emerald-300">[08:00:12] SCRIBE: Drafted 1,200 word markdown article.</div>
-        <div class="text-[#00ff66]">[08:00:18] SYSTEM: Committed post to main branch. Published to GitHub Pages!</div>
+      <div id="content-logs" class="flex-grow overflow-y-auto font-mono text-[10px] space-y-1 bg-black p-2 border border-[#008837] hidden">
+        <div class="text-gray-500">[SYSTEM] Initializing telemetry stream... waiting for backend heartbeat.</div>
       </div>
     </aside>
 
   </div>
 
-  <!-- JAVASCRIPT ANIMATION & INTERACTIVITY ENGINE -->
+  <!-- JAVASCRIPT ANIMATION & REAL-TIME LOGGING ENGINE -->
   <script>
     // 1. Interactive Agent Selector
     const agentData = {
@@ -268,7 +265,31 @@
       document.getElementById('tab-' + tabName).classList.remove('text-gray-500');
     }
 
-    // 3. 2D Station Map Animation Engine (Canvas)
+    // 3. Dynamic Status Fetcher (Connects Frontend Dashboard to Backend agent-status.json)
+    async function fetchLiveAgentStatus() {
+      try {
+        const response = await fetch('./agent-status.json?cache=' + Date.now());
+        if (response.ok) {
+          const data = await response.json();
+          const logBox = document.getElementById('content-logs');
+          
+          const newLog = document.createElement('div');
+          newLog.className = 'text-[#00ff66] font-bold';
+          newLog.innerText = `[${new Date(data.lastUpdate).toLocaleTimeString()}] ${data.activeAgent}: ${data.lastAction}`;
+          
+          logBox.appendChild(newLog);
+          logBox.scrollTop = logBox.scrollHeight;
+        }
+      } catch (err) {
+        console.log("No dynamic status file found yet. Waiting for first automated workflow run.");
+      }
+    }
+
+    // Poll status every 30 seconds
+    setInterval(fetchLiveAgentStatus, 30000);
+    fetchLiveAgentStatus();
+
+    // 4. 2D Station Map Canvas Animation Loop
     const canvas = document.getElementById('stationCanvas');
     const ctx = canvas.getContext('2d');
 
@@ -279,7 +300,6 @@
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
 
-    // Station Nodes (Rooms)
     const rooms = [
       { name: 'BRIDGE (ULTRON)', x: 0.5, y: 0.2, color: '#00ff66' },
       { name: 'RESEARCH LAB', x: 0.2, y: 0.5, color: '#008837' },
@@ -287,7 +307,6 @@
       { name: 'BLOG TERMINAL', x: 0.5, y: 0.8, color: '#008837' }
     ];
 
-    // Worker Agents Moving Sprites
     const workers = [
       { x: 0.5, y: 0.2, targetX: 0.2, targetY: 0.5, speed: 0.002, label: 'Oracle' },
       { x: 0.5, y: 0.2, targetX: 0.8, targetY: 0.5, speed: 0.003, label: 'Forge' },
@@ -341,7 +360,6 @@
         worker.x += (worker.targetX - worker.x) * worker.speed;
         worker.y += (worker.targetY - worker.y) * worker.speed;
 
-        // Reset path when reached destination
         if (Math.abs(worker.x - worker.targetX) < 0.01 && Math.abs(worker.y - worker.targetY) < 0.01) {
           const tempX = worker.targetX;
           const tempY = worker.targetY;
@@ -354,7 +372,6 @@
         const wx = w * worker.x;
         const wy = h * worker.y;
 
-        // Draw Sprite Pulse Dot
         ctx.fillStyle = '#ffffff';
         ctx.beginPath();
         ctx.arc(wx, wy, 4, 0, Math.PI * 2);
