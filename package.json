@@ -1,0 +1,10 @@
+{
+  "name": "free-ai-blog",
+  "version": "1.0.0",
+  "scripts": {
+    "generate": "node scripts/generate-post.js"
+  },
+  "dependencies": {
+    "@google/genai": "^0.1.1"
+  }
+}
