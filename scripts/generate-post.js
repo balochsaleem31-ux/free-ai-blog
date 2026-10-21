@@ -1,5 +1,5 @@
 const fs = require('fs');
-const path = require('path');
+const path = path = require('path');
 const { GoogleGenAI } = require('@google/genai');
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
@@ -63,7 +63,6 @@ Return strictly a raw JSON object (without markdown code fences like \`\`\`json)
     const fileName = `${dateStr}-${postData.slug}.md`;
     const heroImageUrl = `https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80`;
 
-    // Jekyll Front Matter for professional theme styling
     const finalArticle = `---
 layout: post
 title: "${postData.title.replace(/"/g, '\\"')}"
@@ -87,7 +86,17 @@ ${postData.content}
     }
 
     fs.writeFileSync(path.join(targetDir, fileName), finalArticle);
-    console.log(`🎉 Successfully published rich professional article: ${fileName}`);
+    
+    // Save a live status JSON file for your ULTRON-OS UI dashboard
+    const statusData = {
+      lastUpdate: new Date().toISOString(),
+      activeAgent: "SCRIBE",
+      lastAction: `Published article: "${postData.title}"`,
+      status: "ONLINE"
+    };
+    fs.writeFileSync(path.join(__dirname, '../agent-status.json'), JSON.stringify(statusData, null, 2));
+
+    console.log(`🎉 Successfully published rich professional article & status log: ${fileName}`);
 
   } catch (error) {
     console.error("❌ Pipeline failed:", error);
