@@ -3,7 +3,7 @@ const path = require('path');
 const { GoogleGenAI } = require('@google/genai');
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-const modelsToTry = ['gemini-flash-latest', 'gemini-2.5-flash', 'gemini-1.5-flash'];
+const modelsToTry = ['gemini-2.5-flash', 'gemini-2.5-pro', 'gemini-flash'];
 
 async function callGemini(prompt) {
   for (const model of modelsToTry) {
