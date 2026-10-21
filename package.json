@@ -5,6 +5,6 @@
     "generate": "node scripts/generate-post.js"
   },
   "dependencies": {
-    "@google/genai": "latest"
+    "@google/genai": "*"
   }
 }
