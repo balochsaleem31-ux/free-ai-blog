@@ -6,18 +6,11 @@ const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 async function generateBlog() {
   try {
-    const prompt = `Write a comprehensive, SEO-optimized blog post about a trending digital business or productivity topic. 
-    Return the output strictly as a raw JSON object (with no markdown block tags like \`\`\`json) with the following structure:
-    {
-      "title": "Your Blog Title",
-      "slug": "url-friendly-slug",
-      "description": "Short meta description",
-      "content": "Full blog article content formatted in markdown with headings ##, bullet points, and paragraphs."
-    }`;
-
+    console.log("Generating blog post with Gemini...");
+    
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash',
-      contents: prompt,
+      contents: 'Write a comprehensive, SEO-optimized blog post about a trending digital productivity topic. Return the output strictly as a raw JSON object with this exact structure: {"title": "Your Blog Title", "slug": "url-friendly-slug", "description": "Short meta description", "content": "Full blog article content formatted in markdown with headings ## and bullet points."}',
     });
 
     let rawText = response.text.trim();
